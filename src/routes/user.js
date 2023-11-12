@@ -13,4 +13,5 @@ router.delete(
 );
 router.put("/update/:id", UserController.update);
 router.get("/", verifyToken.verifyToken, UserController.getAllUsers);
+
 export default router;

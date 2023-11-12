@@ -24,9 +24,26 @@ class UserController {
     }
 
     async getAllUsers(req, res) {
+        const page = req.query.page;
+        const limit = req.query.limit;
+
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+
         try {
             const user = await AuthModel.find({});
-            res.status(201).json(user);
+            const newUser = user.slice(startIndex, endIndex);
+            const resultUsers = {};
+            resultUsers.next = {
+                page: page + 1,
+                limit,
+            };
+            resultUsers.previous = {
+                page: page - 1,
+                limit,
+            };
+            resultUsers.results = newUser;
+            res.status(201).json(resultUsers);
         } catch (error) {
             res.status(401).json(error);
         }
